@@ -1721,3 +1721,187 @@ footer p,
   object-fit: cover;
   border-radius: inherit;
 }
+
+/* =========================================
+   BLUE + VIOLET PORTFOLIO GLOW EFFECTS
+   ========================================= */
+
+/* 1. Animated ambient background */
+body {
+  background-size: 200% 200%;
+  animation: ambientBackground 18s ease-in-out infinite;
+}
+
+@keyframes ambientBackground {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Soft light overlays */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 15% 25%,
+      rgba(59, 130, 246, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 65%,
+      rgba(139, 92, 246, 0.12),
+      transparent 32%
+    );
+  animation: ambientFloat 16s ease-in-out infinite alternate;
+}
+
+@keyframes ambientFloat {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2%, 1%, 0) scale(1.08);
+  }
+}
+
+/* 2. Custom glowing cursor */
+.custom-cursor-glow,
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 100000;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.custom-cursor-glow {
+  width: 38px;
+  height: 38px;
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow:
+    0 0 18px rgba(59, 130, 246, 0.55),
+    0 0 38px rgba(139, 92, 246, 0.35);
+  transition:
+    width 0.2s ease,
+    height 0.2s ease,
+    background 0.2s ease;
+}
+
+.custom-cursor-dot {
+  width: 7px;
+  height: 7px;
+  background: #a5b4fc;
+  box-shadow: 0 0 12px #60a5fa;
+}
+
+/* 3. Cursor trail particles */
+.cursor-trail-particle {
+  position: fixed;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  background: #818cf8;
+  box-shadow:
+    0 0 8px #60a5fa,
+    0 0 16px rgba(139, 92, 246, 0.8);
+  animation: cursorParticleFade 650ms ease-out forwards;
+}
+
+@keyframes cursorParticleFade {
+  from {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+}
+
+/* Cursor grows slightly over clickable elements */
+.custom-cursor-glow.cursor-hover {
+  width: 58px;
+  height: 58px;
+  background: rgba(139, 92, 246, 0.20);
+  box-shadow:
+    0 0 25px rgba(59, 130, 246, 0.65),
+    0 0 50px rgba(139, 92, 246, 0.45);
+}
+
+/* 4. Glowing hover effects */
+:where(
+  a,
+  button,
+  .project-card,
+  .skill-card,
+  .floating-resume
+) {
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+:where(
+  a,
+  button,
+  .project-card,
+  .skill-card,
+  .floating-resume
+):hover {
+  box-shadow:
+    0 0 12px rgba(59, 130, 246, 0.22),
+    0 0 25px rgba(139, 92, 246, 0.18);
+}
+
+/* Project cards get a stronger blue-violet glow */
+.project-card:hover {
+  border-color: rgba(129, 140, 248, 0.75);
+  box-shadow:
+    0 0 18px rgba(59, 130, 246, 0.28),
+    0 0 35px rgba(139, 92, 246, 0.20);
+}
+
+/* Keep mobile and reduced-motion users comfortable */
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor-glow,
+  .custom-cursor-dot,
+  .cursor-trail-particle {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none !important;
+  }
+
+  body::before {
+    animation: none !important;
+  }
+
+  .cursor-trail-particle {
+    animation: none !important;
+    display: none !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor * {
+    cursor: none !important;
+  }
+}

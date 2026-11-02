@@ -258,3 +258,128 @@ if (techSphere && sphereContainer) {
 
   animateSphere();
 }
+
+/* =========================================
+   CUSTOM BLUE + VIOLET CURSOR
+   ========================================= */
+
+(function initCustomCursor() {
+  const finePointer = window.matchMedia(
+    "(hover: hover) and (pointer: fine)"
+  );
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+
+  // Do not activate custom cursor on touchscreens
+  // or when reduced motion is enabled.
+  if (!finePointer.matches || reducedMotion.matches) return;
+
+  const glow = document.createElement("div");
+  glow.className = "custom-cursor-glow";
+
+  const dot = document.createElement("div");
+  dot.className = "custom-cursor-dot";
+
+  document.body.append(glow, dot);
+  document.body.classList.add("has-custom-cursor");
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+
+  let glowX = mouseX;
+  let glowY = mouseY;
+
+  let cursorVisible = false;
+  let lastParticleTime = 0;
+  let lastParticleX = mouseX;
+  let lastParticleY = mouseY;
+
+  // Smooth cursor movement
+  function animateCursor() {
+    glowX += (mouseX - glowX) * 0.18;
+    glowY += (mouseY - glowY) * 0.18;
+
+    const glowPosition =
+      `translate3d(${glowX}px, ${glowY}px, 0) translate(-50%, -50%)`;
+
+    const dotPosition =
+      `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+
+    glow.style.transform = glowPosition;
+    dot.style.transform = dotPosition;
+
+    requestAnimationFrame(animateCursor);
+  }
+
+  animateCursor();
+
+  // Create a small glowing particle
+  function createTrailParticle(x, y) {
+    const particle = document.createElement("span");
+
+    particle.className = "cursor-trail-particle";
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+
+    document.body.appendChild(particle);
+
+    particle.addEventListener("animationend", () => {
+      particle.remove();
+    }, { once: true });
+  }
+
+  // Follow the mouse and create the trail
+  document.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse") return;
+
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    if (!cursorVisible) {
+      cursorVisible = true;
+      glow.style.opacity = "1";
+      dot.style.opacity = "1";
+    }
+
+    const now = performance.now();
+
+    const distance = Math.hypot(
+      mouseX - lastParticleX,
+      mouseY - lastParticleY
+    );
+
+    if (now - lastParticleTime > 40 && distance > 8) {
+      createTrailParticle(mouseX, mouseY);
+
+      lastParticleTime = now;
+      lastParticleX = mouseX;
+      lastParticleY = mouseY;
+    }
+  });
+
+  // Hide cursor when leaving the browser window
+  document.addEventListener("pointerleave", () => {
+    cursorVisible = false;
+    glow.style.opacity = "0";
+    dot.style.opacity = "0";
+  });
+
+  document.addEventListener("pointerenter", () => {
+    cursorVisible = true;
+    glow.style.opacity = "1";
+    dot.style.opacity = "1";
+  });
+
+  // Enlarge the glow over clickable elements
+  document.addEventListener("pointerover", (event) => {
+    if (event.pointerType !== "mouse") return;
+
+    const target = event.target.closest(
+      "a, button, .project-card, .skill-card, .floating-resume"
+    );
+
+    glow.classList.toggle("cursor-hover", Boolean(target));
+  });
+})();
