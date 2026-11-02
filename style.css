@@ -1,8 +1,3 @@
-/* =========================================================
-   IFRA NAAZ — PORTFOLIO STYLESHEET
-   Dark navy + purple/blue gradient theme
-   Includes horizontal one-line project carousel.
-   ========================================================= */
 
 :root {
   --bg: #080816;
@@ -1468,8 +1463,8 @@ footer p,
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+ backface-visibility: visible;
+-webkit-backface-visibility: visible;
   pointer-events: none;
   transform-style: preserve-3d;
 }
@@ -1679,10 +1674,11 @@ footer p,
 
 /* Header layout for number and category */
 .project-art-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start; /* Aligns them closer together */
+  gap: 12px; /* Decrease this value (e.g., from 16px to 8px or 10px) to reduce spacing */
+  align-items: center;
+  margin-bottom: 10px;
 }
 /* Make the entire card a clickable link */
 .project-card-link {
@@ -1713,4 +1709,15 @@ footer p,
 /* Smooth zoom effect on hover */
 .project-card-link:hover .project-illustration img {
     transform: scale(1.03);
+}
+.profile-card {
+  overflow: hidden;
+}
+
+.profile-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }

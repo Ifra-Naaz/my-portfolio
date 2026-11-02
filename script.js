@@ -205,7 +205,7 @@ if (techSphere && sphereContainer) {
     rotationX -= deltaY * 0.6;
 
     // Keep vertical rotation within a comfortable range
-    rotationX = Math.max(-85, Math.min(85, rotationX));
+   rotationX = rotationX % 360;
 
     velocityY = deltaX * 0.12;
     velocityX = -deltaY * 0.12;
